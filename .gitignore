@@ -1,0 +1,4 @@
+profiles/local/
+docs/local/
+.DS_Store
+node_modules/

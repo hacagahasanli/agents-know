@@ -1,0 +1,12 @@
+name: Feature or agent request
+description: Propose a new agent, gate, mode or adapter
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes: { label: The problem, description: "What goes wrong today without this?" }
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes: { label: Proposal, description: "What should exist, and how would we know it works?" }
+    validations: { required: true }

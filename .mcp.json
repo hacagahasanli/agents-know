@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "backlog": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/backlog-mcp.mjs"]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+name: Bug report
+description: Something did not work as documented
+labels: [bug]
+body:
+  - type: input
+    id: command
+    attributes: { label: Command, placeholder: "/agents-know:fix \"...\"" }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What you expected }
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes: { label: What happened, description: "Relevant lines from feed.md or the error. Remove anything private." }
+    validations: { required: true }
+  - type: input
+    id: versions
+    attributes: { label: Versions, placeholder: "agents-know 0.5.0, Claude Code x.y.z, macOS/Linux" }
