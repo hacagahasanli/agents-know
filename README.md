@@ -2,7 +2,13 @@
 
 # agents-know
 
-### A whole software company inside Claude Code, and an office where you watch it work.
+### Hire a whole software company inside Claude Code, then watch it work from floor 42.
+
+**24 AI specialists plan, build, test and review your code, and none of them can fake "done".**<br>
+A **skeptic** re-runs your tests to catch every fake pass.
+A **bar-raiser** walks across the office and stamps **REJECTED** on any work that comes without proof.
+A **safety hook** stops destructive commands before they run.<br>
+You watch all of it live: agents carry their work to the PM's desk, server racks blink faster during builds, and the whole floor turns green when the job is truly done.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="office/demo-dark.gif">
