@@ -5,14 +5,14 @@
     "url": "https://github.com/hacagahasanli"
   },
   "metadata": {
-    "description": "A whole software team as Claude Code agents: a PM leads 24 specialists (QA, security, performance, accessibility, code review) through quality gates until a written definition of done is met. Safety hook blocks destructive commands.",
+    "description": "A whole software company inside Claude Code that you can watch work in a live isometric office. 24 agents: a skeptic re-runs your tests, a bar-raiser rejects work without proof, a hook blocks destructive commands. Modes from startup to hardcore.",
     "version": "0.5.0"
   },
   "plugins": [
     {
       "name": "agents-know",
       "source": "./",
-      "description": "A whole software team as Claude Code agents: a PM leads 24 specialists (QA, security, performance, accessibility, code review) through quality gates until a written definition of done is met. Safety hook blocks destructive commands."
+      "description": "A whole software company inside Claude Code that you can watch work in a live isometric office. 24 agents: a skeptic re-runs your tests, a bar-raiser rejects work without proof, a hook blocks destructive commands. Modes from startup to hardcore."
     }
   ]
 }

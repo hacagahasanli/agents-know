@@ -2,21 +2,26 @@
 
 # agents-know
 
-### One Claude Code plugin. A whole software company behind it.
-
-**Your AI says it's done. agents-know makes it prove it.**
-A PM agent staffs every job from 24 specialists, and only calls in the ones the work needs.
-A **skeptic** re-runs your tests and tries to break every "done".
-A **bar-raiser** rejects anything that comes without evidence.
-A **safety hook** makes sure nothing ever drops your database.
-You get working code, the proof that it works, and a guide for reviewing it.
+### A whole software company inside Claude Code, and an office where you watch it work.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="office/prototype-dark.png">
-  <img alt="The agents-know office: agents at their desks on floor 42, a bar-raiser stamping REJECTED on a hand-back" src="office/prototype.png" width="100%">
+  <img alt="The agents-know office on floor 42: agents at their desks, a bar-raiser stamping REJECTED on a hand-back" src="office/prototype.png" width="100%">
 </picture>
 
-<sub>The office: a replay of a demo run in <code>hardcore</code> mode. Open <a href="office/prototype.html"><code>office/prototype.html</code></a> to watch it.</sub>
+</div>
+
+## What you get
+
+- **A live office for your AI team.** Run `/agents-know:office` and your run becomes an isometric office on floor 42. Agents walk to the PM's office with their hand-backs. The bar-raiser walks over and stamps **REJECTED** on weak work. Server racks blink faster during builds. When the definition of done is met, the whole floor turns green.
+- **A skeptic that catches fake "done".** It re-runs your tests and build itself, and hunts for skipped tests, edited tests, assertions that check nothing, and untested error states.
+- **A bar-raiser that rejects work without proof.** Every hand-back is scored against a written definition of done. A missing check is a blocker, and high scores elsewhere don't average it away.
+- **Four company modes.** Choose `startup`, `standard`, `bigtech` or `hardcore`. In hardcore the boss is "toxic": zero tolerance and blunt, but aimed at the work, never at you.
+- **A safety hook, not a polite request.** `DROP TABLE`, force pushes, `.env` reads, remote database access and data-dropping migrations are blocked in every session. 48 tests prove it.
+- **24 specialists, called only when needed.** A dispatcher picks the smallest team and the cheapest model that can do each job. A cartographer maps your repo once, so agents stop re-exploring it.
+- **A review guide and a mentor.** At the end you get who did what, where to look first, and why it was built that way.
+
+<div align="center">
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
@@ -29,20 +34,7 @@ You get working code, the proof that it works, and a guide for reviewing it.
 
 ---
 
-## The problem
-
-AI coding agents are fast. They also:
-
-- say **"done"** when the tests were never run, or were edited until they passed;
-- skip the boring parts: error states, accessibility, auth checks, migrations that keep the data;
-- review their own work, so nobody really reviews it;
-- run `DROP TABLE` or `git push --force` if they think it will fix the problem.
-
-You end up acting as the QA team, the security reviewer and the staff engineer for everything the AI produced.
-
-## The fix
-
-agents-know gives the AI the structure of a real product company and makes it follow that structure.
+## Why it's different
 
 | Without agents-know | With agents-know |
 | --- | --- |
@@ -159,6 +151,7 @@ flowchart LR
 | `/agents-know:feature <what>` | A feature inside an existing product, at the same quality bar |
 | `/agents-know:forge <product>` | A new product: one interview, then autonomous work |
 | `/agents-know:backlog [profile]` | Rank your backlog and work through it task by task |
+| `/agents-know:office [run]` | Watch the run live in the isometric office |
 | `/agents-know:status` | Where the run stands: phase, tasks, open findings |
 | `/agents-know:resume` | Continue an interrupted run |
 | `/agents-know:learn [topic]` | Ask the mentor anything about what was built |
@@ -236,7 +229,7 @@ This README says only what we have checked. Here is where things stand in v0.5:
 | Evals | One scenario file per agent in [evals/](evals/). These are run by hand and **haven't been scored yet**. We'll publish results, not claims |
 | Token savings | Designed in through the cartographer, the dispatcher and `startup` mode. **Not measured yet** |
 | Other platforms | Codex, Cursor, OpenCode and Copilot are on the [roadmap](docs/ROADMAP.md) and **not supported yet** |
-| The office | Replays a demo run today. Watching a live run is next |
+| The office | `/agents-know:office` streams your current run's feed to a local page that listens on 127.0.0.1 only. Opening `office/prototype.html` directly plays a demo run |
 
 ## Backlog
 

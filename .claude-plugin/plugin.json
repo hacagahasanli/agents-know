@@ -1,26 +1,28 @@
 {
   "name": "agents-know",
   "version": "0.5.0",
-  "description": "A whole software team as Claude Code agents: a PM leads 24 specialists (QA, security, performance, accessibility, code review) through quality gates until a written definition of done is met. Safety hook blocks destructive commands.",
+  "description": "A whole software company inside Claude Code that you can watch work in a live isometric office. 24 agents: a skeptic re-runs your tests, a bar-raiser rejects work without proof, a hook blocks destructive commands. Modes from startup to hardcore.",
   "author": {
     "name": "hacagahasanli",
     "url": "https://github.com/hacagahasanli"
   },
   "license": "MIT",
   "keywords": [
+    "accessibility",
+    "agent-visualization",
+    "agentic-coding",
+    "ai-agents",
     "claude-code",
     "claude-code-plugin",
-    "ai-agents",
-    "multi-agent",
-    "subagents",
-    "agentic-coding",
     "code-review",
-    "quality-gates",
-    "qa",
-    "security",
-    "accessibility",
+    "developer-tools",
+    "isometric",
     "mcp",
-    "developer-tools"
+    "multi-agent",
+    "qa",
+    "quality-gates",
+    "security",
+    "subagents"
   ],
   "homepage": "https://github.com/hacagahasanli/agents-know",
   "repository": "https://github.com/hacagahasanli/agents-know"

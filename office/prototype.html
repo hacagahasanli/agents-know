@@ -54,6 +54,15 @@ h1{margin:0;font:800 26px/1 var(--serif);letter-spacing:-.01em}
 .sub{margin:4px 0 0;color:var(--muted);font-size:11px}
 .badge{flex:none;padding:5px 9px;border-radius:6px;border:1.5px solid var(--bad);color:var(--bad);font-weight:600;font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;transform:rotate(3deg)}
+.livepill{flex:none;display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:6px;border:1.5px solid var(--ok,#2f8f5b);color:var(--ok,#2f8f5b);font-weight:600;font-size:11px;letter-spacing:.12em}
+.livepill[hidden],.btn.golive[hidden],.empty[hidden]{display:none}
+.livepill i{width:7px;height:7px;border-radius:50%;background:currentColor;animation:lp 1.4s ease-in-out infinite}
+.livepill.behind{opacity:.55}.livepill.behind i{animation:none}
+@keyframes lp{50%{opacity:.25}}
+.hgroup{display:flex;gap:8px;align-items:flex-start}
+.btn.golive{width:auto;padding:0 12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:block}
+.empty{position:absolute;inset:0;z-index:4;display:grid;place-items:center;text-align:center;padding:24px;pointer-events:none}
+.empty p{margin:0;padding:14px 18px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:14px;line-height:1.5;max-width:420px}
 .run{margin:0 18px 12px;padding:10px 12px;border-radius:10px;background:var(--panel2);font-size:12px;line-height:1.4}
 .run b{font-family:var(--serif);font-size:15px;display:block}
 .phases{list-style:none;margin:0 18px 12px;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
@@ -99,22 +108,24 @@ h1{margin:0;font:800 26px/1 var(--serif);letter-spacing:-.01em}
     <canvas id="cv" role="img" aria-label="Isometric office. Twenty four AI agents at desks in Plan, Build, Verify, Review, Ship and Learn rooms, with a glass corner office for the PM, a rest room and a server room. People walk to hand work back. The live feed on the right lists every event."></canvas>
     <div class="banner" id="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Definition of done: met</div>
     <div class="tip" id="tip"></div>
+    <div class="empty" id="empty" hidden><p>No run yet — start one with <b>/agents-know:fix …</b></p></div>
     <div class="controls">
       <button class="btn main" id="play" aria-label="Play"><svg viewBox="0 0 16 16" id="ico"></svg></button>
       <div class="seg" role="group" aria-label="Speed">
         <button data-s="1" aria-pressed="true">1x</button><button data-s="4" aria-pressed="false">4x</button><button data-s="16" aria-pressed="false">16x</button>
       </div>
       <button class="btn restart" id="restart" aria-label="Restart"><svg viewBox="0 0 16 16"><path d="M8 2.5a5.5 5.5 0 105.2 7.2.9.9 0 10-1.7-.6A3.7 3.7 0 118 4.3v1.6c0 .4.5.6.8.3l2.6-2.4a.5.5 0 000-.8L8.8.6C8.5.4 8 .6 8 1v1.5z"/></svg></button>
+      <button class="btn golive" id="golive" hidden>Jump to live</button>
       <div class="track"><div class="ticks" id="ticks"></div><input type="range" id="scrub" min="0" max="100" step="0.05" value="0" aria-label="Scrub the run"></div>
       <span class="clock" id="clock">--:--:--</span>
     </div>
   </main>
   <aside class="side">
     <header>
-      <div><h1>The office</h1><p class="sub">agents-know / demo run, no real data</p></div>
-      <span class="badge" id="badge">hardcore</span>
+      <div><h1>The office</h1><p class="sub" id="sub">agents-know / demo run, no real data</p></div>
+      <div class="hgroup"><span class="livepill" id="livepill" hidden><i></i><span id="livetxt">LIVE</span></span><span class="badge" id="badge">hardcore</span></div>
     </header>
-    <p class="run"><b>Comments with @mentions</b>feature run, zero tolerance, bar-raiser on every hand-back</p>
+    <p class="run"><b id="runname">Comments with @mentions</b><span id="runsub">feature run, zero tolerance, bar-raiser on every hand-back</span></p>
     <ol class="phases" id="phases" aria-label="Phase"></ol>
     <div class="stats">
       <div class="stat h" id="s-h"><b>0</b><span>hand-backs</span></div>
@@ -129,6 +140,10 @@ h1{margin:0;font:800 26px/1 var(--serif);letter-spacing:-.01em}
 <script>
 (()=>{
 'use strict';
+const LIVE=/^https?:$/.test(location.protocol)&&!new URLSearchParams(location.search).get('demo');
+const ALIAS={qa:'qa-engineer',designer:'product-designer',writer:'tech-writer',security:'security-engineer',perf:'performance-engineer',a11y:'accessibility-specialist',staff:'staff-reviewer',sre:'sre-engineer',frontend:'frontend-engineer',backend:'backend-engineer'};
+const rawName=n=>n.replace(/^agents-know:/i,'');
+const esc=t=>String(t).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const pad=n=>String(n).padStart(2,'0');
 const fmt=s=>{const t=17*3600+20*60+s;return `${pad(t/3600|0)}:${pad(t%3600/60|0)}:${pad(t%60)}`};
 const SCRIPT=[
@@ -226,14 +241,17 @@ AID.pm={id:'pm',zone:null,role:'The PM: loads specialists, collects hand-backs, 
 const NAMES=AGENTS.map(a=>a.id).sort((a,b)=>b.length-a.length);
 const SKIN=[28,24,20,32,18],HAIR=[25,35,45,10,48,280];
 
-function parse(text){
- const out=[];let lastHb=null;
+let PLH=null;
+function normAgent(n){if(!LIVE)return n;n=rawName(n).toLowerCase();n=ALIAS[n]||n;return AID[n]?n:'pm'}
+function normTarget(n){if(!LIVE)return n;n=rawName(n).toLowerCase();n=ALIAS[n]||n;return AID[n]&&n!=='pm'?n:null}
+function parse(text,off=0){
+ const out=[];let lastHb=PLH;
  const sec=t=>{const [h,m,s]=t.split(':').map(Number);return h*3600+m*60+s};
  for(const line of text.split('\n')){
   const m=line.match(/^(\d\d:\d\d:\d\d)\s+(\S+)\s+(.*\S)\s*$/);if(!m)continue;
-  const [,time,agent]=m;let body=m[3],tag=null,tgt=null;
-  const tm=body.match(/^\[(\w+)(?::([\w-]+))?\]\s*/);
-  if(tm){tag=tm[1].toLowerCase();tgt=tm[2]||null;body=body.slice(tm[0].length)}
+  const [,time,rawAgent]=m;const agent=normAgent(rawAgent);let body=m[3],tag=null,tgt=null;
+  const tm=body.match(/^\[(\w+)(?::([\w:.-]+))?\]\s*/);
+  if(tm){tag=tm[1].toLowerCase();tgt=tm[2]?normTarget(tm[2]):null;body=body.slice(tm[0].length)}
   let kind=tag;
   if(!kind){
    if(/^rejected\b/i.test(body)||(agent==='bar-raiser'&&/\brejected\.?$/i.test(body)))kind='reject';
@@ -246,7 +264,7 @@ function parse(text){
    else if(/^team:/i.test(body))kind='team';
    else kind='info';
   }
-  const e={i:out.length,time,s:sec(time),agent,body,kind,target:null,alarm:false,team:null};
+  const e={i:off+out.length,time,s:sec(time),agent,label:rawName(rawAgent),body,kind,target:null,alarm:false,team:null};
   const named=NAMES.find(n=>n!==agent&&new RegExp('(^|[^\\w-])'+n+'([^\\w-]|$)').test(body));
   if(kind==='reject')e.target=tgt||named||lastHb;
   if(kind==='finding'&&agent==='skeptic'&&/disprov/i.test(body)){e.alarm=true;e.target=tgt||named||lastHb}
@@ -257,11 +275,12 @@ function parse(text){
   if(agent==='bar-raiser'||agent==='skeptic')e.zone=null;
   out.push(e);
  }
+ PLH=lastHb;
  return out;
 }
-const E=parse(FEED),N=E.length;
+const E=LIVE?[]:parse(FEED);let N=E.length;
 const T=E.map(e=>1.2+(e.s-E[0].s));
-const TEND=T[N-1]+3;
+let TEND=LIVE?3:T[N-1]+3;
 
 const W=28,D=14.6,C0=6.4,C1=8.4,CY=7.4,SPEED=3.6;
 const RM={};
@@ -365,12 +384,15 @@ function jobBreak(id,type){
 }
 const BREAKS=[[22,'analyst','coffee'],[30,'accessibility-specialist','water'],[37,'product-designer','stretch'],[46,'performance-engineer','coffee'],[53,'ip-guard','water'],[62,'product-designer','coffee'],[74,'analyst','stretch'],[82,'mentor','water'],[92,'accessibility-specialist','coffee'],[103,'performance-engineer','stretch'],[110,'ip-guard','coffee'],[121,'analyst','sofa']];
 const PRE=[];
-E.forEach((e,i)=>{
- if(e.kind==='reject'&&DK[e.target]){const A=S['bar-raiser'],L=plen(route(DK['bar-raiser'].seat,DK[e.target].visit,A.off),A.x,A.y);PRE.push({t:T[i]-L/SPEED-.9,i})}
- if(e.alarm&&DK[e.target]){const A=S.skeptic,L=plen(route(DK.skeptic.seat,DK[e.target].visit,A.off),A.x,A.y);PRE.push({t:T[i]-L/SPEED-.9,i})}
-});
+function preLead(e){
+ if(e.kind==='reject'&&DK[e.target]){const A=S['bar-raiser'];return plen(route(DK['bar-raiser'].seat,DK[e.target].visit,A.off),A.x,A.y)/SPEED+.9}
+ if(e.alarm&&DK[e.target]){const A=S.skeptic;return plen(route(DK.skeptic.seat,DK[e.target].visit,A.off),A.x,A.y)/SPEED+.9}
+ return null;
+}
+function addPre(e,i){const L=preLead(e);if(L!==null)PRE.push({t:T[i]-L,i,done:false})}
+E.forEach(addPre);
 PRE.sort((a,b)=>a.t-b.t);
-let pi=0,bi=0;
+let bi=0,nb=8;
 
 function stepActor(id,dt){
  const A=S[id];
@@ -404,8 +426,9 @@ function stepActor(id,dt){
 function step(dt){
  sim+=dt;
  while(st.idx<N&&T[st.idx]<=sim){apply(E[st.idx],!fast);st.idx++}
- while(pi<PRE.length&&PRE[pi].t<=sim){const e=E[PRE[pi].i];if(e.kind==='reject')jobReject(e.i);else jobInspect(e.i);pi++}
- while(bi<BREAKS.length&&BREAKS[bi][0]<=sim){const[,id,ty]=BREAKS[bi],A=S[id];if(A&&A.awake&&A.seated&&!A.cur&&!A.q.length)jobBreak(id,ty);bi++}
+ for(const p of PRE){if(!p.done&&p.t<=sim){p.done=true;const e=E[p.i];if(e.kind==='reject')jobReject(e.i);else jobInspect(e.i)}}
+ if(LIVE&&sim>=nb){nb=sim+6+rnd(sim)*6;const c=Object.keys(S).filter(id=>id!=='pm'&&S[id].awake&&S[id].seated&&!S[id].cur&&!S[id].q.length);if(c.length)jobBreak(c[Math.floor(rnd(sim*3.1)*c.length)],['coffee','water','stretch','sofa'][Math.floor(rnd(sim*1.7)*4)])}
+ while(!LIVE&&bi<BREAKS.length&&BREAKS[bi][0]<=sim){const[,id,ty]=BREAKS[bi],A=S[id];if(A&&A.awake&&A.seated&&!A.cur&&!A.q.length)jobBreak(id,ty);bi++}
  for(const id in S)stepActor(id,dt);
  for(const d of DOORS){let near=0;for(const id in S){const A=S[id];if(A.awake&&!A.seated&&Math.abs(A.x-d.x)<1.5&&Math.abs(A.y-d.y)<1.5){near=1;break}}d.o+=(near-d.o)*Math.min(1,dt*6)}
  for(const id in S){const A=S[id];const alive=A.bubble&&(ac-A.bubble.t0)<(A.bubble.kind==='reject'?6:4.2)&&(ac-A.bubble.t0)>=0;A.glow+=((alive?1:0)-A.glow)*Math.min(1,dt*8)}
@@ -433,7 +456,7 @@ function apply(e,live){
 function reset(){
  for(const id in S){const d=DK[id],ch=d.chair;Object.assign(S[id],{awake:id==='pm',glow:0,bubble:null,rejected:false,alarm:false,x:ch.x,y:ch.y,seated:true,pose:'sit',carry:null,q:[],cur:null,tail:d.seat,fx:0,fy:1,v:0,phi:0,nod:-9})}
  Object.assign(st,{idx:0,h:0,r:0,f:0,p:0,phase:null,done:false});st.visited.clear();
- anims.length=0;parts.length=0;shake=0;sim=0;pi=0;bi=0;win=0;
+ anims.length=0;parts.length=0;shake=0;sim=0;for(const p of PRE)p.done=false;bi=0;nb=8;win=0;
  for(const d of DOORS)d.o=0;
 }
 function seek(t){
@@ -1380,21 +1403,24 @@ function draw(){
   const g=ctx.createRadialGradient(cw/2,ch/2,Math.min(cw,ch)*.3,cw/2,ch/2,Math.max(cw,ch)*.75);g.addColorStop(0,'rgba(80,220,130,0)');g.addColorStop(1,`rgba(60,200,110,${.26*win})`);ctx.fillStyle=g;ctx.fillRect(0,0,cw,ch)}
 }
 
-const KG={start:'›',wrote:'+',handback:'→',finding:'!',reject:'×',pass:'✓',done:'★',info:'·',team:'›'};
-const rows=E.map(e=>{
+const KG={blocked:'■',start:'›',wrote:'+',handback:'→',finding:'!',reject:'×',pass:'✓',done:'★',info:'·',team:'›'};
+const rows=[];
+function addRow(e){
  const r=document.createElement('div');r.className='row k-'+e.kind;r.hidden=true;r.dataset.i=e.i;
  const z=AID[e.agent]&&AID[e.agent].zone;
  const hue=z?ZID[z].hue:(e.agent==='pm'?20:200);
- r.innerHTML=`<time>${e.time}</time><b style="--h:${hue}">${e.agent}</b><span></span>`;
+ r.innerHTML=`<time>${e.time}</time><b style="--h:${hue}"></b><span></span>`;r.children[1].textContent=e.label||e.agent;
  r.lastChild.textContent=`${KG[e.kind]} ${e.body}`;
  r.addEventListener('click',()=>seek(T[e.i]+.01));
- feedEl.appendChild(r);return r;
-});
+ feedEl.appendChild(r);rows.push(r);
+}
+E.forEach(addRow);
 const phasesEl=document.getElementById('phases');
 ZONES.forEach(z=>{const li=document.createElement('li');li.textContent=z.id;li.style.setProperty('--h',z.hue);li.dataset.z=z.id;phasesEl.appendChild(li)});
 const ticks=document.getElementById('ticks');
-E.forEach(e=>{if(e.kind==='reject'||e.alarm){const i=document.createElement('i');if(e.kind==='reject')i.className='r';i.style.left=(T[e.i]/TEND*100)+'%';ticks.appendChild(i)}});
-scrub.max=TEND;
+const SMAX=()=>LIVE?Math.max(N?T[N-1]:1,1):TEND;
+function buildTicks(){ticks.textContent='';E.forEach(e=>{if(e.kind==='reject'||e.alarm){const i=document.createElement('i');if(e.kind==='reject')i.className='r';i.style.left=(T[e.i]/SMAX()*100)+'%';ticks.appendChild(i)}})}
+buildTicks();scrub.max=SMAX();
 const stat={h:document.getElementById('s-h'),r:document.getElementById('s-r'),f:document.getElementById('s-f'),p:document.getElementById('s-p')};
 const shown={h:0,r:0,f:0,p:0};
 function ui(){
@@ -1404,7 +1430,7 @@ function ui(){
  const cur=E[st.idx-1];clock.textContent=cur?cur.time:'--:--:--';
  rows.forEach((r,i)=>r.classList.toggle('now',i===st.idx-1));
  banner.classList.toggle('on',st.done);
- const ended=st.idx>=N;
+ const ended=!LIVE&&st.idx>=N;
  ico.innerHTML=playing&&!ended?'<path d="M4 2h3v12H4zM9 2h3v12H9z"/>':ended?'<path d="M8 2.5a5.5 5.5 0 105.2 7.2.9.9 0 10-1.7-.6A3.7 3.7 0 118 4.3v1.6c0 .4.5.6.8.3l2.6-2.4a.5.5 0 000-.8L8.8.6C8.5.4 8 .6 8 1v1.5z"/>':'<path d="M4 2l10 6-10 6z"/>';
  playBtn.setAttribute('aria-label',playing&&!ended?'Pause':ended?'Replay':'Play');
 }
@@ -1414,20 +1440,22 @@ function frame(now){
  const run=st.phase==='Build'||st.phase==='Verify';
  ledRate+=((run?10:2.4)-ledRate)*Math.min(1,dt*2.5);ledT+=dt*ledRate;
  if(playing){
-  ac+=dt*Math.min(speed,3);
-  let rem=dt*speed;while(rem>1e-6){const s=Math.min(.05,rem);step(s);rem-=s}
-  if(st.idx>=N&&sim>TEND-1){playing=false}
-  if(!scrubbing)scrub.value=Math.min(sim,TEND);
+  const spd=LIVE?(sim<histEnd-.01?20:1):speed;
+  ac+=dt*Math.min(spd,3);
+  let rem=dt*spd;while(rem>1e-6){const s=Math.min(.05,rem);step(s);rem-=s}
+  if(!LIVE&&st.idx>=N&&sim>TEND-1){playing=false}
+  if(!scrubbing)scrub.value=Math.min(sim,SMAX());
  }
  for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.life-=dt;if(p.life<=0){parts.splice(i,1);continue}if(p.dust){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;continue}p.vy+=260*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.99;p.r+=dt*6}
  shake*=Math.pow(.02,dt);
- const k=`${st.idx}|${st.h}|${st.r}|${st.f}|${st.p}|${st.phase}|${st.done}|${playing}`;if(k!==sig){sig=k;ui()}
+ const behind=LIVE&&N>0&&sim<T[N-1]-.5;if(LIVE&&behind!==wasBehind){wasBehind=behind;livePill.classList.toggle('behind',behind);liveTxt.textContent=behind?'REPLAY':'LIVE';goLive.hidden=!behind}
+ const k=`${N}|${st.idx}|${st.h}|${st.r}|${st.f}|${st.p}|${st.phase}|${st.done}|${playing}`;if(k!==sig){sig=k;ui()}
  draw();requestAnimationFrame(frame);
 }
 scrub.addEventListener('pointerdown',()=>scrubbing=true);
 addEventListener('pointerup',()=>scrubbing=false);
 scrub.addEventListener('input',()=>seek(+scrub.value));
-playBtn.addEventListener('click',()=>{if(st.idx>=N){restart();return}playing=!playing;ui()});
+playBtn.addEventListener('click',()=>{if(!LIVE&&st.idx>=N){restart();return}playing=!playing;ui()});
 document.getElementById('restart').addEventListener('click',()=>restart());
 function restart(){seek(0);scrub.value=0;playing=true;ui()}
 document.querySelectorAll('.seg button').forEach(b=>{
@@ -1444,7 +1472,7 @@ cv.addEventListener('pointermove',e=>{
  for(const id in S){const[x,y]=anchor(id);const sx=x*K+OX,sy=(y+8)*K+OY;const d=Math.hypot(sx-mx,(sy-my)*.8);if(d<bd){bd=d;best=id}}
  hover=bd<40*K+10?best:null;
  if(hover){const ag=AID[hover],A=S[hover];
-  tip.innerHTML=`<b>${ag.id}</b><br>${ag.role}<br><i>${A.awake?(A.bubble?A.bubble.text:'seated'):'dormant, not loaded for this run'}</i>`;
+  tip.innerHTML=`<b>${esc(ag.id)}</b><br>${esc(ag.role)}<br><i>${A.awake?(A.bubble?esc(A.bubble.text):'seated'):'dormant, not loaded for this run'}</i>`;
   tip.style.left=clamp(mx+14,6,cw-270)+'px';tip.style.top=clamp(my+14,6,ch-90)+'px';tip.classList.add('on')}
  else tip.classList.remove('on');
 });
@@ -1455,6 +1483,40 @@ add(PMD.cx+PMD.cy+.3,drawPM);
 DOORS.forEach(d=>add(d.x+d.y+.02,()=>drawDoor(d)));
 ITEMS.sort((a,b)=>a.k-b.k);
 new ResizeObserver(layout).observe(stage);layout();
+const livePill=document.getElementById('livepill'),liveTxt=document.getElementById('livetxt'),goLive=document.getElementById('golive');
+let histEnd=0,histDone=false,lastAbs=0,dayOff=0,wasBehind=false;
+function liveAdd(line){
+ const es=parse(line,E.length);if(!es.length)return;
+ const e=es[0];let abs=e.s+dayOff;if(N&&abs<lastAbs-43200){dayOff+=86400;abs+=86400}
+ let t;
+ if(!histDone)t=N?T[N-1]+clamp(abs-lastAbs,.3,6):1.2;
+ else{t=Math.max(N?T[N-1]+.3:0,sim+.05);const L=preLead(e);if(L!==null)t=Math.max(t,sim+L)}
+ lastAbs=abs;E.push(e);T.push(t);N=E.length;TEND=t+3;scrub.max=SMAX();
+ addRow(e);addPre(e,e.i);buildTicks();
+}
+if(LIVE){
+ document.querySelector('.seg').style.display='none';
+ livePill.hidden=false;document.getElementById('badge').hidden=true;
+ document.getElementById('sub').textContent='agents-know / live';
+ document.getElementById('runname').textContent='Waiting for a run';document.getElementById('runsub').textContent='following feed.md';
+ goLive.addEventListener('click',()=>{seek(T[N-1]+.01);playing=true;ui()});
+ const run=q.get('run');
+ const es=new EventSource('/events'+(run?'?run='+encodeURIComponent(run):''));
+ let opened=false;
+ es.onopen=()=>{if(opened)location.reload();opened=true};
+ es.onerror=()=>{
+  if(!opened){es.close();const u=new URL(location.href);u.searchParams.set('demo','1');location.replace(u);return}
+  livePill.classList.add('behind');liveTxt.textContent='OFFLINE';wasBehind=true;
+ };
+ es.addEventListener('meta',ev=>{try{const m=JSON.parse(ev.data);
+  document.getElementById('empty').hidden=true;
+  document.getElementById('runname').textContent=m.run;
+  const b=document.getElementById('badge');if(m.mode){b.textContent=m.mode;b.hidden=false}}catch{}});
+ es.addEventListener('line',ev=>liveAdd(ev.data));
+ es.addEventListener('history-end',()=>{histDone=true;histEnd=N?T[N-1]:0});
+ es.addEventListener('empty',()=>{document.getElementById('empty').hidden=false;histDone=true});
+ es.addEventListener('reset',()=>location.reload());
+}
 const t0=+q.get('t');if(t0>0)seek(t0);
 ui();requestAnimationFrame(frame);
 })();
