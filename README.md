@@ -5,8 +5,8 @@
 ### A whole software company inside Claude Code, and an office where you watch it work.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="office/prototype-dark.png">
-  <img alt="The agents-know office on floor 42: agents at their desks, a bar-raiser stamping REJECTED on a hand-back" src="office/prototype.png" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="office/demo-dark.gif">
+  <img alt="The agents-know office on floor 42: agents at their desks, a bar-raiser stamping REJECTED on a hand-back" src="office/demo.gif" width="100%">
 </picture>
 
 </div>
