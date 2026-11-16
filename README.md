@@ -2,38 +2,32 @@
 
 # agents-know
 
-### Your AI writes code. agents-know makes sure it's actually done.
+### Your AI says it's done. agents-know makes it prove it.
 
-**An open-source Claude Code plugin that turns one session into a whole software team.** You see six roles: **Plan, Build, Verify, Review, Ship and Learn**. Behind them a PM loads 24 specialists only when the work needs them: research, design, engineering, QA, security, performance, accessibility and code review. Nothing counts as finished until a skeptic can't disprove it, a bar-raiser signs off, and it meets a written definition of done.
+**One Claude Code plugin. A whole software company behind it.**
+A PM agent staffs every job from 24 specialists, and only calls in the ones the work needs.
+A **skeptic** re-runs your tests and tries to break every "done".
+A **bar-raiser** rejects anything that comes without evidence.
+A **safety hook** makes sure nothing ever drops your database.
+You get working code, the proof that it works, and a guide for reviewing it.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="office/prototype-dark.png">
+  <img alt="The agents-know office: agents at their desks on floor 42, a bar-raiser stamping REJECTED on a hand-back" src="office/prototype.png" width="100%">
+</picture>
+
+<sub>The office: a replay of a demo run in <code>hardcore</code> mode. Open <a href="office/prototype.html"><code>office/prototype.html</code></a> to watch it.</sub>
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 ![Agents](https://img.shields.io/badge/agents-24-555)
 ![Safety hook](https://img.shields.io/badge/safety%20hook-on%20by%20default-2ea44f)
 
-[Install](#install) · [Company modes](#company-modes) · [How it works](#how-it-works) · [Commands](#commands) · [The team](#the-team) · [Safety](#safety) · [Roadmap](docs/ROADMAP.md)
+[Install](#install) · [Company modes](#company-modes) · [Status](#status) · [How it works](#how-it-works) · [Commands](#commands) · [The team](#the-team) · [Safety](#safety) · [Roadmap](docs/ROADMAP.md)
 
 </div>
 
 ---
-
-## Company modes
-
-You choose how demanding the company is, once per run (or set a default in `/agents-know:setup`).
-
-| Mode | The company is... | What you get |
-| --- | --- | --- |
-| `startup` | Moving fast | MVP quality, tests plus a skeptic, cheapest models, a small team |
-| `standard` | A solid product team (default) | Every gate, independent review before the staff review |
-| `bigtech` | Process-heavy | Design docs and ADRs, the full verify suite, a bar-raiser on every slice |
-| `hardcore` | A toxic boss | Zero tolerance. The bar-raiser rejects until the work is excellent, the skeptic attacks every claim. Blunt about the work, never about you |
-
-```text
-bar-raiser: No evidence. Rejected.
-bar-raiser: You tested the happy path. Where is the error state? Rejected.
-```
-
-Two agents are the reason the output is better. The **skeptic** re-runs the tests and builds itself and tries to prove "done" is false (edited or skipped tests, untested states, fake passes). The **bar-raiser** scores every hand-back against the definition of done and sends it back with concrete demands. Two more are the reason fewer tokens are spent. The **cartographer** keeps a compact repo map so agents read it instead of exploring the repository. The **dispatcher** picks the smallest team and the cheapest adequate model for each role. Details are in [references/company-modes.md](references/company-modes.md).
 
 ## The problem
 
@@ -58,6 +52,24 @@ agents-know gives the AI the structure of a real product company and makes it fo
 | Whether a destructive command runs is luck | A hook **blocks** destructive SQL, remote database access, force pushes, `.env` reads and data-dropping migrations in every session |
 | You review a giant diff and hope | You get a review guide: who did what, where to look first, and the business logic of each flow |
 | You learn nothing | A staff-engineer mentor explains what was built and why |
+
+## Company modes
+
+You choose how demanding the company is, once per run (or set a default in `/agents-know:setup`).
+
+| Mode | The company is... | What you get |
+| --- | --- | --- |
+| `startup` | Moving fast | MVP quality, tests plus a skeptic, cheapest models, a small team |
+| `standard` | A solid product team (default) | Every gate, independent review before the staff review |
+| `bigtech` | Process-heavy | Design docs and ADRs, the full verify suite, a bar-raiser on every slice |
+| `hardcore` | A toxic boss | Zero tolerance. The bar-raiser rejects until the work is excellent, the skeptic attacks every claim. Blunt about the work, never about you |
+
+```text
+bar-raiser: No evidence. Rejected.
+bar-raiser: You tested the happy path. Where is the error state? Rejected.
+```
+
+Two agents are the reason the output is better. The **skeptic** re-runs the tests and builds itself and tries to prove "done" is false (edited or skipped tests, untested states, fake passes). The **bar-raiser** scores every hand-back against the definition of done and sends it back with concrete demands. Two more are the reason fewer tokens are spent. The **cartographer** keeps a compact repo map so agents read it instead of exploring the repository. The **dispatcher** picks the smallest team and the cheapest adequate model for each role. Details are in [references/company-modes.md](references/company-modes.md).
 
 ## Install
 
@@ -154,6 +166,9 @@ flowchart LR
 
 ## The team
 
+<details>
+<summary><b>All 24 specialists</b></summary>
+
 | Role | Agent | What it does |
 | --- | --- | --- |
 | Product manager | main session | Interviews you, plans, briefs every agent, enforces exit criteria |
@@ -182,6 +197,8 @@ flowchart LR
 | Technical writer | `tech-writer` | Docs, review guide, commit plan |
 | Mentor | `mentor` | Teaches you what was built and how the agents built it |
 
+</details>
+
 Small tasks use one or two agents. The full team only joins when the work needs it, and the company mode decides how much review sits on top.
 
 ## Safety
@@ -206,6 +223,20 @@ Safety is enforced by a hook, not by asking the model nicely.
 **Privacy by default.** Every stored field is classified, and secrets and private content stay out of logs and analytics.
 
 The hook has its own test suite: `bash tests/guard.test.sh`. The design is described in [docs/SECURITY.md](docs/SECURITY.md).
+
+## Status
+
+This README says only what we have checked. Here is where things stand in v0.5:
+
+| | State |
+| --- | --- |
+| Claude Code plugin | Works; `claude plugin validate .` passes in CI |
+| Safety hook | 48 tests in `tests/guard.test.sh`, run in CI |
+| Agent quality | Every agent rewritten and independently reviewed. See [docs/AGENT_QUALITY_AUDIT.md](docs/AGENT_QUALITY_AUDIT.md) |
+| Evals | One scenario file per agent in [evals/](evals/). These are run by hand and **haven't been scored yet**. We'll publish results, not claims |
+| Token savings | Designed in through the cartographer, the dispatcher and `startup` mode. **Not measured yet** |
+| Other platforms | Codex, Cursor, OpenCode and Copilot are on the [roadmap](docs/ROADMAP.md) and **not supported yet** |
+| The office | Replays a demo run today. Watching a live run is next |
 
 ## Backlog
 
