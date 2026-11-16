@@ -30,8 +30,8 @@ Use it when the user works through a backlog or says tokens are tight. Quality c
 
 1. **Map first.** Every brief starts with "Read `REPO_MAP.md` first; grep `REPO_INDEX.md` to find symbols; open only the files the task needs." The setup skill creates both. A task that adds a module or pattern adds one line to the map.
 2. **One agent per task.** One engineer builds backend, frontend and tests. No separate designer or architect unless the task is mostly a new screen or a new data model.
-3. **Models by role.** Builders run on Sonnet (agent frontmatter). Opus stays on architect, debugger, staff-reviewer and security-engineer.
-4. **Review by risk.** One review round only for changes to authentication, authorization, money or balances, migrations or private data. The reviewer fixes trivial issues itself. Other tasks rely on their own tests and checks.
+3. **Models by role.** Builders run on Sonnet (agent frontmatter). Opus stays on architect, debugger, security-engineer, staff-reviewer, bar-raiser and incident-commander.
+4. **Review by risk.** One review round only for changes to authentication, authorization, money or balances, migrations or private data. Reviewers are read-only; the PM makes a trivial fix itself (pm-playbook section 7). Other tasks rely on their own tests and checks.
 5. **Fixes go back to the same agent** (SendMessage), never to a new one, so nothing is re-read.
 6. **Quiet output.** Agents run tests through summary-only wrappers (failures plus the summary line; full log in a file), run touched suites per task, and the full suites once at the end on the integration branch.
 7. **Short hand-backs.** At most 10 lines to the PM; evidence lives in the run log file. The PM reads the file only to spot-check a claim.

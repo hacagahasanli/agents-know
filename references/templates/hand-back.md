@@ -1,8 +1,8 @@
 # Hand-back - <agent> - <task id>
 
-<!-- Write this full template to the run log file. The message to the PM is at most 10 lines: status, commit hashes or files, the test summary lines, findings by severity, open questions. In lean mode, drop "For the mentor" unless asked. -->
+<!-- Write this full template to the run log file. The message to the PM is at most 10 lines: status, files changed, the test summary lines, findings by severity, open questions. In lean mode, drop "For the mentor" unless asked. -->
 
-Status: done | partial | blocked
+Status: Complete | Partial | Blocked | Rejected
 Gate: <G0 | G1 | G2 | G3 | none> - passed | failed
 
 ## What I did

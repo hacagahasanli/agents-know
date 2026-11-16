@@ -20,7 +20,7 @@ Task fields: `title`, `note` (the owner's words), `type` (`bug`, `feature`, `imp
 
 ## Start
 
-1. Resolve the profile as the `forge` skill does, and read the profile's owner principles.
+1. Read `${CLAUDE_PLUGIN_ROOT}/references/pm-playbook.md`. Resolve the profile (playbook 3.1) and read its owner principles.
 2. `backlog_list`. If it fails, tell the owner the backlog server is not running and stop.
 3. Tasks in `doing` belong to a run that did not finish: read its `run` directory's ledger and resume that task first, as the `resume` skill does.
 4. Tasks in `backlog` with an `answer` carry the owner's reply to your earlier question. Use it; never ask the same question again.
@@ -43,8 +43,8 @@ Write the reason in `pm` when the order is not obvious (a dependency, two tasks 
 1. `backlog_update` the task to `status: doing`.
 2. Size it with the rules of the `task` skill and continue exactly as the `task`, `feature` or `fix` skill describes. The task's title and `note` are the request. Write the run id into `run`, and the branch into `branch` when the run uses one.
 3. Tasks that are one change (the same screen, the same navigation) can share one run; say so in each task's `pm`.
-4. When the run needs a decision only the owner can make, and the owner principles, the brief and the host's rules do not answer it: write the question in `pm` with your recommended answer, set `status: decision`, pause the run as the `resume` skill expects, and go on to the next task. Do not wait.
-5. When the run meets its definition of done: write in `pm` what changed, the proof that ran and the commit plan path, set `status: done`, and stop the run.
+4. When the run hits an escalation from playbook section 9: write the question in `pm` with your recommended answer, set `status: decision`, pause the run as the `resume` skill expects, and go on to the next task. Do not wait.
+5. When the run meets its definition of done (playbook section 12, with evidence in `verify/acceptance.md`): write in `pm` what changed, the proof that ran and the commit plan path, set `status: done`, and stop the run.
 6. Tell the owner one line per finished task and move on.
 
 Stop when no task is left in `backlog`, or the owner says stop. Then give the owner: tasks done with their runs, tasks waiting in `decision` with their questions, and what they must review and commit.

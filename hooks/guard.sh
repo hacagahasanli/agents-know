@@ -19,7 +19,7 @@ payload="$(printf '%s' "$payload" | sed -E 's/feed\.sh(\\")?[[:space:]]+[^[:spac
 agent="$(printf '%s' "$payload" | grep -Eo '"agent_type" *: *"[^"]+"' | head -1 | sed -E 's/.*"([^"]+)"$/\1/; s/^agents-know://')"
 readonly_agent=0
 case "$agent" in
-  qa-engineer|security-engineer|staff-reviewer|bar-raiser|skeptic|ip-guard|accessibility-specialist|performance-engineer|mentor) readonly_agent=1 ;;
+  qa-engineer|security-engineer|staff-reviewer|bar-raiser|skeptic|ip-guard|accessibility-specialist|performance-engineer|mentor|dispatcher) readonly_agent=1 ;;
 esac
 
 tool="$(printf '%s' "$payload" | grep -Eo '"tool_name" *: *"[A-Za-z]+"' | head -1 | sed -E 's/.*"([A-Za-z]+)"$/\1/')"

@@ -1,6 +1,6 @@
 # Company modes
 
-The company mode sets how demanding the run is: which gates run, who joins, how hard the bar-raiser pushes, and which models are used. It is asked once at the start of `forge`, `feature`, `fix` and `task`, unless the profile has `Company mode:` set (the `setup` skill asks for the default). The user can answer with one word. The choice goes into `brief.md` (or the top of `ledger.md` for fix and task) as `Company mode: <mode>`, and every brief to an agent repeats it.
+The company mode sets how demanding the run is: which gates run, who joins, how hard the bar-raiser pushes, and which models are used. It is asked once at the start of `forge`, `feature`, `fix` and `task`, unless the profile has `Company mode:` set (the `setup` skill asks for the default). The user can answer with one word. The choice goes into `brief.md` (every work mode has one) as `Company mode: <mode>`, and every brief to an agent repeats it. `pm-playbook.md` section 7 shows how each mode changes the PM's orchestration.
 
 The mode never lowers the data-safety rules, the hard stops, the privacy defaults or the severity rule that critical and high findings block a release. It changes how much ceremony surrounds them.
 
@@ -20,9 +20,9 @@ The mode never lowers the data-safety rules, the hard stops, the privacy default
 
 ## Rules for every mode
 
-- **Dispatcher.** The PM asks `dispatcher` to staff each phase or slice in the mode; the PM may override and records why.
+- **Dispatcher.** The PM asks `dispatcher` to staff each `forge` or `feature` phase and any slice whose team is not obvious; for a `task` or a one-cause `fix` the PM staffs the work-mode minimum and records it in one ledger line. The PM may override the dispatcher and records why.
 - **Cartographer.** On a repository without a fresh `REPO_MAP.md` (missing, or the recorded sha far behind), `cartographer` runs first, in every mode. After slices that add modules or patterns it updates the map incrementally.
-- **Order of review.** Hand-back, then `skeptic` (where the mode runs it), then `bar-raiser` (where the mode runs it), then the PM's own mechanical check. A `skeptic` list of disproven claims goes back to the agent before the `bar-raiser` reads anything.
+- **Order of review.** Hand-back, the PM's mechanical check, then `skeptic` (where the mode runs it), then `bar-raiser` (where the mode runs it), then the PM's own spot-check (`pm-playbook.md` section 7). A `skeptic` list of disproven claims goes back to the agent before the `bar-raiser` reads anything.
 - **Rework loop.** A rework round is: demands to the same agent, a fixed hand-back, `skeptic` again on the claims that were disproven, `bar-raiser` again. When the rounds are used up, the PM stops the loop, lists the unmet demands in the ledger and the report, and applies the playbook rule for open findings (critical and high still block).
 - **Escalation.** The mode can be raised mid-run by the user, never lowered by the PM. Changing it is recorded in the ledger.
 - **Tone applies to the work only.** In every mode, criticism is aimed at the work, never at a person or the user, and never uses insults or slurs.

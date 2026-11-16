@@ -11,6 +11,7 @@ Reply in the profile's language with:
 - phase and what is in progress;
 - tasks done / total;
 - open findings by severity, critical and high listed by title;
+- hand-backs in rework (agent, round used of the mode's limit) and blocked items waiting for the user;
 - the last three decisions;
 - new mentor digests since the last status;
 - the last ten lines of `feed.md`.

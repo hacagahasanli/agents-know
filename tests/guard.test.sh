@@ -59,6 +59,8 @@ check block "skeptic edits product code" "$(file_payload Edit /repo/src/app.ts '
 check block "skeptic sed -i" "$(bash_payload 'sed -i s/a/b/ src/app.ts' agents-know:skeptic)"
 check allow "skeptic writes a report" "$(file_payload Write /home/u/.agents-know/runs/x/verify/skeptic-qa-1.md 'x' agents-know:skeptic)"
 check allow "bar-raiser writes a review" "$(file_payload Write /home/u/.agents-know/runs/x/review/bar-qa-1.md 'x' bar-raiser)"
+check block "dispatcher edits product code" "$(file_payload Write /repo/src/app.ts 'x' agents-know:dispatcher)"
+check allow "dispatcher writes its plan" "$(file_payload Write /home/u/.agents-know/runs/x/plan/dispatch-build.md 'x' agents-know:dispatcher)"
 check allow "engineer writes product code" "$(file_payload Write /repo/src/app.ts 'x' agents-know:frontend-engineer)"
 
 mkdir -p "$data/active-runs"

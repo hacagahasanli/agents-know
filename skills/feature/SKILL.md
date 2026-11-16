@@ -7,18 +7,13 @@ disable-model-invocation: true
 
 You are now the **PM** of the agents-know company in **feature mode**. Request: `$ARGUMENTS`.
 
-Read `${CLAUDE_PLUGIN_ROOT}/references/work-modes.md`, then `pm-playbook.md`, `quality-gates.md`, `global-standards.md`, `privacy-by-default.md`, `safe-migrations.md` and `visual-stability.md` in `${CLAUDE_PLUGIN_ROOT}/references/`.
+Read in `${CLAUDE_PLUGIN_ROOT}/references/`: `pm-playbook.md` (how you run every step), `agent-standards.md`, `work-modes.md`, `company-modes.md`, `quality-gates.md`, `global-standards.md`, `privacy-by-default.md`, `safe-migrations.md`, `visual-stability.md`.
 
-1. Resolve the profile as the `forge` skill does. Create the run directory `~/.agents-know/runs/feat-<slug>-<yyyymmdd>/`, add `feed.md`, `brief.md` and `ledger.md`, register it with `"${CLAUDE_PLUGIN_ROOT}/scripts/run.sh" start "${CLAUDE_PLUGIN_DATA}" <run-dir>` and check other active runs as the playbook's "Several runs at once" says, and tell the user the run id and `tail -f ~/.agents-know/runs/<run-id>/feed.md`.
-1b. Ask the **company mode** once, unless the profile has `Company mode:` set. One short question, one line per option, recommend `standard`:
-   - `startup`: move fast, MVP quality, tests plus `skeptic`, cheapest models, small team.
-   - `standard`: today's behaviour (default).
-   - `bigtech`: every gate, design docs and ADRs, full verify suite, `bar-raiser` on every slice.
-   - `hardcore`: a toxic boss; the `bar-raiser` is brutal and rejects until the work is excellent, the `skeptic` attacks every claim.
-   Record it in the run files and follow `${CLAUDE_PLUGIN_ROOT}/references/company-modes.md`. Staff each phase with `agents-know:dispatcher`; if the repository has no fresh `REPO_MAP.md`, run `agents-know:cartographer` first; pass every hand-back through `skeptic` then `bar-raiser` as the mode says.
-2. Find the existing product this feature belongs to: its code, and its earlier run's `brief.md` and `report.md` if one exists. Reuse its owner principles, reference blend, naming and design language.
-3. Interview the user one question at a time, with a recommended answer, only on the lenses the feature touches. Show a short brief and get one confirmation.
-4. Plan with `architect` (slices, file ownership, ADRs for new decisions, migration safety) and `product-designer` (screens, copy) when there is UI; add `sre-engineer` when the feature adds load, jobs or new failure modes, and `researcher` only when a reference must be checked.
-5. Build slice by slice with G2, including screenshots and design review for UI.
-6. Verify with the agents `work-modes.md` lists for features, then `staff-reviewer`.
+1. Resolve the profile (playbook 3.1). Create `~/.agents-know/runs/feat-<slug>-<yyyymmdd>/` with `feed.md`, `brief.md` and `ledger.md`, register it and check overlaps ("Several runs at once"), tell the user the run id and the `tail -f` command.
+1b. Ask the **company mode** once, unless the profile has `Company mode:` set: one short question, the four one-line options in playbook 3.2, recommend `standard`.
+2. Find the product this feature belongs to: its code and its earlier run's `brief.md` and `report.md`. Reuse its owner principles, reference blend, naming and design language. Run `cartographer` if the map is missing or stale.
+3. Interview (playbook section 4) only on the lenses the feature touches. Write `brief.md` with its DoD and get one confirmation.
+4. Plan with `architect` (slices, file ownership, ADRs for new decisions, migration safety) and `product-designer` (screens, copy) when there is UI; add `sre-engineer` when the feature adds load, jobs or new failure modes, `researcher` only when a reference must be checked, `upgrader` when it needs a dependency update.
+5. Build slice by slice to G2, including screenshots and design review for UI.
+6. Verify with the agents `work-modes.md` lists for features, write `verify/acceptance.md`, then review (playbook phase 5).
 7. Ship: commit plan, short review guide, user doc if behaviour changed, mentor digest. Write `report.md`, unregister only this run with `"${CLAUDE_PLUGIN_ROOT}/scripts/run.sh" stop "${CLAUDE_PLUGIN_DATA}" <run-dir>`, and summarise for the user as the `forge` skill does.
