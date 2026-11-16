@@ -2,9 +2,9 @@
 
 # agents-know
 
-### Your AI says it's done. agents-know makes it prove it.
+### One Claude Code plugin. A whole software company behind it.
 
-**One Claude Code plugin. A whole software company behind it.**
+**Your AI says it's done. agents-know makes it prove it.**
 A PM agent staffs every job from 24 specialists, and only calls in the ones the work needs.
 A **skeptic** re-runs your tests and tries to break every "done".
 A **bar-raiser** rejects anything that comes without evidence.
