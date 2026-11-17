@@ -2,3 +2,4 @@ profiles/local/
 docs/local/
 .DS_Store
 node_modules/
+CLAUDE.local.md
