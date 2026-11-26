@@ -19,7 +19,7 @@ payload="$(printf '%s' "$payload" | sed -E 's/feed\.sh(\\")?[[:space:]]+[^[:spac
 agent="$(printf '%s' "$payload" | grep -Eo '"agent_type" *: *"[^"]+"' | head -1 | sed -E 's/.*"([^"]+)"$/\1/; s/^agents-know://')"
 readonly_agent=0
 case "$agent" in
-  qa-engineer|security-engineer|staff-reviewer|bar-raiser|skeptic|ip-guard|accessibility-specialist|performance-engineer|mentor|dispatcher) readonly_agent=1 ;;
+  qa-engineer|security-engineer|staff-reviewer|bar-raiser|skeptic|ip-guard|accessibility-specialist|performance-engineer|mentor|dispatcher|team-reviewer|talent-scout) readonly_agent=1 ;;
 esac
 
 tool="$(printf '%s' "$payload" | grep -Eo '"tool_name" *: *"[A-Za-z]+"' | head -1 | sed -E 's/.*"([A-Za-z]+)"$/\1/')"
@@ -65,7 +65,7 @@ fi
 case "$tool" in
   Read|Edit|Write|MultiEdit|NotebookEdit)
     matches '"file_path" *: *"[^"]*/\.env(\.[a-z]+)?"' && ! matches '"file_path" *: *"[^"]*\.env\.example"' && block "reading or editing a .env file with secrets"
-    if [ "$readonly_agent" = 1 ] && [ "$tool" != "Read" ] && ! matches '"file_path" *: *"[^"]*/\.agents-know/runs/' && ! matches '"file_path" *: *"[^"]*(/tests?/|/__tests__/|\.test\.|\.spec\.|/test_[^/"]*\.py)'; then
+    if [ "$readonly_agent" = 1 ] && [ "$tool" != "Read" ] && ! matches '"file_path" *: *"[^"]*/\.agents-know/(runs|team)/' && ! matches '"file_path" *: *"[^"]*(/tests?/|/__tests__/|\.test\.|\.spec\.|/test_[^/"]*\.py)'; then
       block "verifier agents write only reports and tests, not product code"
     fi
     if [ "$tool" != "Read" ] && ! matches '"file_path" *: *"[^"]*/\.agents-know/runs/' && ! matches '"file_path" *: *"[^"]*\.(md|mdx|rst|txt)"'; then

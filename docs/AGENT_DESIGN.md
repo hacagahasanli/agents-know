@@ -108,4 +108,4 @@ Why specialists at all (Recommendation, with the cost stated): they give (a) ind
 4. References by `${CLAUDE_PLUGIN_ROOT}/references/<file>`; no other path forms (the generator rewrites them).
 5. Body under 30,000 characters (Copilot limit) and under about 6,000 in practice: the largest agent today is about 8,200 characters, the playbook about 15,300 (Verified, byte counts).
 6. A new agent needs: a golden fixture in the adapter tests, a planted-defect fixture if it is a verifier, and an entry in this catalog.
-7. Prefer extending an existing agent's checklist to adding a new agent. The catalog has 24 agents; the surface stays small on purpose.
+7. Prefer extending an existing agent's checklist to adding a new agent. The catalog has 26 agents; the surface stays small on purpose.

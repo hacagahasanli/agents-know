@@ -1,7 +1,7 @@
 {
   "name": "agents-know",
-  "version": "0.5.0",
-  "description": "A whole software company inside Claude Code that you can watch work in a live isometric office. 24 agents: a skeptic re-runs your tests, a bar-raiser rejects work without proof, a hook blocks destructive commands. Modes from startup to hardcore.",
+  "version": "0.6.0",
+  "description": "A whole software company inside Claude Code that you can watch work in a live isometric office. 26 agents: a skeptic re-runs your tests, a bar-raiser rejects work without proof, a hook blocks destructive commands. Modes from startup to hardcore.",
   "author": {
     "name": "hacagahasanli",
     "url": "https://github.com/hacagahasanli"

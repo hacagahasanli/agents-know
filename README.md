@@ -4,7 +4,7 @@
 
 ### Hire a whole software company inside Claude Code, then watch it work from floor 42.
 
-**24 AI specialists plan, build, test and review your code, and none of them can fake "done".**<br>
+**26 AI specialists plan, build, test and review your code, and none of them can fake "done".**<br>
 A **skeptic** re-runs your tests to catch every fake pass.
 A **bar-raiser** walks across the office and stamps **REJECTED** on any work that comes without proof.
 A **safety hook** stops destructive commands before they run.<br>
@@ -24,14 +24,14 @@ You watch all of it live: agents carry their work to the PM's desk, server racks
 - **A bar-raiser that rejects work without proof.** Every hand-back is scored against a written definition of done. A missing check is a blocker, and high scores elsewhere don't average it away.
 - **Four company modes.** Choose `startup`, `standard`, `bigtech` or `hardcore`. In hardcore the boss is "toxic": zero tolerance and blunt, but aimed at the work, never at you.
 - **A safety hook, not a polite request.** `DROP TABLE`, force pushes, `.env` reads, remote database access and data-dropping migrations are blocked in every session. 48 tests prove it.
-- **24 specialists, called only when needed.** A dispatcher picks the smallest team and the cheapest model that can do each job. A cartographer maps your repo once, so agents stop re-exploring it.
+- **26 specialists, called only when needed.** A dispatcher picks the smallest team and the cheapest model that can do each job. A cartographer maps your repo once, so agents stop re-exploring it.
 - **A review guide and a mentor.** At the end you get who did what, where to look first, and why it was built that way.
 
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
-![Agents](https://img.shields.io/badge/agents-24-555)
+![Agents](https://img.shields.io/badge/agents-26-555)
 ![Safety hook](https://img.shields.io/badge/safety%20hook-on%20by%20default-2ea44f)
 
 [Install](#install) · [Company modes](#company-modes) · [Status](#status) · [How it works](#how-it-works) · [Commands](#commands) · [The team](#the-team) · [Safety](#safety) · [Roadmap](docs/ROADMAP.md)
@@ -162,11 +162,12 @@ flowchart LR
 | `/agents-know:resume` | Continue an interrupted run |
 | `/agents-know:learn [topic]` | Ask the mentor anything about what was built |
 | `/agents-know:recap` | What the agents did, told as an AI-engineering case study |
+| `/agents-know:team [hire <role>]` | Performance review of the agents themselves: who to keep, retrain or retire, and which role is missing |
 
 ## The team
 
 <details>
-<summary><b>All 24 specialists</b></summary>
+<summary><b>All 26 specialists</b></summary>
 
 | Role | Agent | What it does |
 | --- | --- | --- |
@@ -195,6 +196,8 @@ flowchart LR
 | Upgrader | `upgrader` | Dependency and CVE updates, one dependency per slice |
 | Technical writer | `tech-writer` | Docs, review guide, commit plan |
 | Mentor | `mentor` | Teaches you what was built and how the agents built it |
+| Team reviewer | `team-reviewer` | Grades every agent on its record across runs; recommends keep, retrain (with the prompt diff), merge or retire (read-only) |
+| Talent scout | `talent-scout` | Writes a candidate agent for a real gap plus the eval it must pass before it gets a seat (read-only) |
 
 </details>
 

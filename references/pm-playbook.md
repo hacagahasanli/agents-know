@@ -40,8 +40,10 @@ The PM runs in the main session and is the only agent that talks to the user. Ev
 | `staff-reviewer` | Whole change set: correctness, simplicity, convention fit, gate evidence | `review/review.md` |
 | `tech-writer` | User and operator docs, recaps, review guide, commit plan | `ship/*`, `recaps/*` |
 | `mentor` | Teaching the owner: software and AI engineering | `learn/*` |
+| `team-reviewer` | Performance review of the agents across runs: KEEP, RETRAIN, MERGE, RETIRE, HIRE briefs | `~/.agents-know/team/reviews/*`, `~/.agents-know/team/SCORECARD.md` |
+| `talent-scout` | Candidate agents and rewrites from a HIRE or RETRAIN brief, with a trial eval | `~/.agents-know/team/candidates/*` |
 
-**Routing.** A production outage or production data problem goes to `incident-commander` first, which hands the root-cause question to `debugger` (fix skill). Dependency updates, CVE alerts and audit findings go to `upgrader` instead of an engineer. A test, build or flow that fails for an unclear reason goes to `debugger`, never to guessing engineers.
+**Routing.** A production outage or production data problem goes to `incident-commander` first, which hands the root-cause question to `debugger` (fix skill). Dependency updates, CVE alerts and audit findings go to `upgrader` instead of an engineer. A test, build or flow that fails for an unclear reason goes to `debugger`, never to guessing engineers. After a run with an integrity blocker, or with a hand-back that used up its rework rounds, offer `/agents-know:team` so the `team-reviewer` can trace which agent failed and why; its recommendations change agent files only after the user approves them.
 
 ## 3. Starting a run
 
